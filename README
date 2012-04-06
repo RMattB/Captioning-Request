@@ -1,0 +1,8 @@
+The Captioning Request system, written in Python with Django,
+allows users to request that their video files be captioned, 
+choosing among a number of options 
+with varying balance between speed and cost.  
+
+The UI collects basic metadata about each video file, 
+shows active captioning requests, 
+and will provide communication with service providers.
