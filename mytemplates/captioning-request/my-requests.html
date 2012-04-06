@@ -1,0 +1,35 @@
+<title>Captioning Requests</title>
+
+<h1>
+    Captioning Requests
+    <!-- to do: filter for user
+     for: 
+    {{ user.username }}, {{ user.first_name }} {{ user.last_name }}
+    -->
+</h1>
+
+{% if error_message %}
+    <h2>
+        Your captioning request form entry had errors:
+    </h2>
+    {{ error_message }}
+    
+{% else %}
+
+    <h2>
+        {{ thanks_message }}
+    </h2>
+    
+    <!-- show the captioning requests -->
+    {% if user_captioning_requests %}
+        <ul>
+        {% for captioning_request in user_captioning_requests %}
+            <li><a href="/captioning-request/{{ captioning_request.id }}/">{{ captioning_request }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No captioning requests are available.</p>
+    {% endif %}
+
+{% endif %}
+

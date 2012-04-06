@@ -1,0 +1,11 @@
+<title>Captioning Request Detail for {{ captioning_request }}</title>
+
+<h1>Captioning Request Detail for {{ captioning_request }}</h1>
+<ul>
+
+{% for field, value in captioning_request.get_fields %}
+    <p>{{ field }}: {{ value }}</p>
+{% endfor %}
+<!-- to do: needs formatting & publishing destination -->
+
+</ul>

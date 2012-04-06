@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Request Captioning of a Video (prototype)</title>
+        <style type="text/css">
+            body {
+                font-family:sans-serif;
+                margin:2em;
+                /* height:111em; */
+                background-repeat:no-repeat;
+                background: #eeeeff;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeff), to(#ffffff)); /* Saf4+, Chrome */
+                background-image: -webkit-linear-gradient(top, #eeeeff, #ffffff); /* Chrome 10+, Saf5.1+, iOS 5+ */
+                background-image:    -moz-linear-gradient(top, #eeeeff, #ffffff); /* FF3.6 */
+                background-image:     -ms-linear-gradient(top, #eeeeff, #ffffff); /* IE10 */
+                background-image:      -o-linear-gradient(top, #eeeeff, #ffffff); /* Opera 11.10+ */
+                background-image:         linear-gradient(to bottom, #eeeeff, #ffffff);
+            }
+            h1 {
+                /* display:inline;
+                margin:1em; */
+            }
+            p, ul {
+                margin-left:2em;
+            }
+            p.logged_in {
+                text-align:right;
+                color:green;
+            }
+            ul.form {
+                list-style-type:none;
+            }
+            li {
+                margin-bottom:.6em;
+            }
+            input[type="text"] {
+                width:40em;
+                display: block;
+            }
+            textarea {
+                display: block;
+            }
+            input[type="submit"] {
+                font-size:1.5em;
+                margin-top:1em;
+            }
+            .hide {
+                /* display:none; */
+            }
+            select {
+                display:block;
+            }
+        </style>
+
+    </head>
+    <body>
+        
+        <h1>Request Captioning of a Video 
+        (<a href="https://docs.google.com/drawings/d/1vyEb8EmdW6Jo14c8sV6gLAkRVa6l6D_N8dlWCeHKtDg/view">prototype</a>)</h1>
+
+        <form method="post" action="/captioning-request/my-requests/">
+            {% csrf_token %}
+            {{ form.management_form }}
+            {{ form.id }}
+
+            <p class="logged_in">
+                (You are logged in as: 
+                {{ user.username }}, {{ user.first_name }} {{ user.last_name }})
+            </p>
+            
+            <h2>Benefits of captioning</h2>
+                <p>Captioning adds value to your prerecorded videos:</p>
+                <ul>
+                    <li>provides <strong>accessibility</strong> to people who are hearing impaired</li>
+                    <li><strong>improves comprehension</strong> for people reviewing the material, 
+                        especially for non-native speakers or listeners of the language</li>
+                    <li>enables people to <strong>search within and find</strong> your videos</li>
+                </ul>
+
+            <h2>Lower cost with a transcript</h2>
+                <p>Supplying the text of the words spoken in your video (a transcript) 
+                    can significantly lower the cost of captioning.</p>
+                <p>
+                    {{ form.video_has_transcript.help_text }}
+                    {{ form.video_has_transcript }}
+                </p>
+                <ul class="form">
+                    <li>
+                        <!--
+                        <input type="radio" name="have_transcript" id="have_transcript_yes">
+                        <label for="have_transcript_yes">Yes. (Captioning is <strong>free</strong> for 3 business day turnaround.)</label>
+                        -->
+                        <div id="transcript_section" class="hide">
+                            {{ form.video_transcript_file_URL.help_text }}
+                            {{ form.video_transcript_file_URL }}
+                        </div>
+                    </li>
+                    <li>
+                        <!--
+                        <input type="radio" name="have_transcript" id="have_transcript_no">
+                        <label for="have_transcript_no">No. (Captioning is <strong>billed</strong>.)</label><br>
+                        -->
+                        <div id="billing_agree_section" class="have_transcript-no hide">
+                            {{ form.requester_agrees_to_billing }}
+                            {{ form.requester_agrees_to_billing.help_text }}
+                        </div>
+                    </li>
+                </ul>
+                
+            <div id="speed_vs_cost" class="hide">
+            <h2>Speed vs. cost (estimated)</h2>
+                <p>
+                    {{ form.captioning_service.help_text }}
+                    {{ form.captioning_service }}
+                    {{ form.captioning_service.description }}
+                </p>
+                <!--
+                <ul class="form">
+                    <li>
+                        <input type="radio" name="urgency" id="urgency1">
+                        <label for="urgency1">1 business day ($5.00 per minute of video)</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="urgency" id="urgency2">
+                        <label for="urgency2">2 business days ($3.00 per minute of video)</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="urgency" id="urgency3">
+                        <label for="urgency3">5 business days ($1.50 per minute of video)</label>
+                    </li>
+                </ul>
+                -->
+                <p>
+                    Cost is estimated, and is dependent on factors including audio quality, language, number of speakers, and how well you describe the video here.
+                </p>
+            </div>
+                
+            <div id="video_file_section" class="hide">
+            <h2>Upload video file</h2>
+                <p>
+                    {{ form.video_file_URL.help_text }}
+                    {{ form.video_file_URL }}
+                </p>
+                <p>
+                    (If you need help with creating media files, please contact <a href="http://mediacommons.p.edu">Media Commons</a>.)
+                </p>
+            </div>
+                
+            <div id="about" class="hide">
+            <h2>About this video content</h2>
+                <p>
+                    {{ form.video_title.help_text }}
+                    {{ form.video_title }}
+                </p>
+                <p>
+                    {{ form.video_description.help_text }}
+                    {{ form.video_description }}
+                </p>
+                <p>
+                    {{ form.video_speakers.help_text }}
+                    {{ form.video_speakers }}
+                </p>
+                <p id="special_vocabulary" class="have_transcript-no hide">
+                    {{ form.video_vocabulary.help_text }}
+                    {{ form.video_vocabulary }}
+                </p>
+                <p>
+                    {{ form.other_approver_email.help_text }}
+                    {{ form.other_approver_email }}
+                </p>
+            </div>
+            
+            <div id="destination" class="hide">
+            <h2>Publishing destination</h2>
+                <p>
+                    {{ form.publishing_destinations.help_text }}
+                    {{ form.publishing_destinations }}
+                </p>
+                <p>
+                    {{ form.other_notes.help_text }}
+                    {{ form.other_notes }}
+                </p>
+                <p>
+                    {{ form.contact_special_request }}
+                    {{ form.contact_special_request.help_text }}
+                </p>
+            </div>
+
+            <div id="submit_form_section" class="have_transcript-no hide">
+                <input type="submit" value="Submit Video Captioning Request" id="submit_form">
+            </div>
+
+        </form>
+        <!-- to do's:
+            Tooltips? What about hover? Touch for definition? Do people expect that?
+        -->
+
+    </body>
+</html>
